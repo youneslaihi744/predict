@@ -1,5 +1,6 @@
 // controllers/predictController.js
 const { getModelInfo, predict } = require("../services/tfModelService");
+const Predict = require('../mongoDB');
 
 function health(req, res) {
   res.json({
@@ -64,13 +65,29 @@ async function doPredict(req, res) {
     const latencyMs = Date.now() - start;
     const timestamp = new Date().toISOString();
 
-    // De momento sin MongoDB → predictionId null
-    res.status(201).json({
-      predictionId: null,
-      prediction,
-      timestamp,
-      latencyMs
+    let prediction1 = new Predict({
+      result: prediction,
+      timestamp
     });
+    prediction1.save()
+      .then(id => {
+        console.log('Se ha guardado Correctamente');
+        res.status(201).json({
+          predictionId: id._id,
+          prediction,
+          timestamp,
+          latencyMs
+        });
+      }).catch(err => {
+        console.error('Error de guardar en DB:', err);
+        res.status(201).json({
+          predictionId: null,
+          prediction,
+          timestamp,
+          latencyMs
+        });
+      });
+    
   } catch (err) {
     console.error("Error en /predict:", err);
     res.status(500).json({ error: "Internal error" });
