@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+require("dotenv").config();
 // Conectar a MongoDB
-mongoose.connect('mongodb://localhost:27017/producto')
+const MONGO_URI=process.env.MONGO_URI;
+
+mongoose.connect(MONGO_URI)
     .then(() => {
         console.log('Conexión a la base de datos establecida');
     }).catch(err => {
