@@ -67,7 +67,10 @@ async function doPredict(req, res) {
 
     let prediction1 = new Predict({
       result: prediction,
-      timestamp
+      timestamp,
+      latencyMS:latencyMs,
+      dataId:meta.dataId,
+      createdAt:Date()
     });
     prediction1.save()
       .then(id => {

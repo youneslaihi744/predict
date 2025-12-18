@@ -14,6 +14,9 @@ const Schema = mongoose.Schema;
 const PredictSchema = new Schema({
     result: { type: Number, required: true },
     timestamp: String,
+    latencyMS: Number,
+    dataId: String,
+    createdAt: Date
 });
 
 module.exports = mongoose.model('Predict', PredictSchema);
